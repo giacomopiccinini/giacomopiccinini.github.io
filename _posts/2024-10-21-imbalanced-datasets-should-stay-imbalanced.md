@@ -12,6 +12,10 @@ To do this, I will start from some maths and leave the code at the very end, jus
 
 Let’s set the stage. Suppose we have a binary classification problem on a generic, possibly imbalanced, dataset $D$. The dataset $D$ will be composed of two subsets $\mathcal{C}_0$ and $\mathcal{C}_1$, $D = \mathcal{C}_0 \cup \mathcal{C}_1$, where $\mathcal{C}_i$ contains all the elements with label $i$. The cardinalities of these subsets, i.e. the number of elements they contain, are indicated with
 \[Z = |\mathcal{C}_0|\, , \qquad O = |\mathcal{C}_1| \, . \]
+
+```math
+x=y
+```
 Assuming the minority class to always be that with label 1, it is useful to introduce a quantity $\rho$ defined by
 $$
 \rho = \frac{Z}{O}
