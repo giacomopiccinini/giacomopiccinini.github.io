@@ -57,7 +57,8 @@ p = \frac{TP}{TP + FP}\, , \qquad r = \frac{TP}{TP + FN}\, .
 
 Let’s explore these a little bit further. The $TN$ do no enter the game at all. However, we can rephrase the $FP$ as 
 ```math
-FP = Z \cdot \mathrm{fpr} = \rho \cdot O \cdot \mathrm{fpr}\, , \qquad \mathrm{fpr} = \frac{FP}{Z} = \frac{FP}{TN+FP}```
+FP = Z \cdot \mathrm{fpr} = \rho \cdot O \cdot \mathrm{fpr}\, , \qquad \mathrm{fpr} = \frac{FP}{Z} = \frac{FP}{TN+FP}
+```
 where $\mathrm{fpr}$ indicates the *false positive ratio*. The reason for introducing the latter is that, *in principle*, for a well-trained model its value should not depend on the dataset size, nor on the dataset balance: if the model generalises well, this ratio should remain approximately constant irrespective of the dataset being composed of 100 or 1 million elements, and is not sensitive to the true number of elements with label 1. On the contrary, $FP$ is obviously very much dependent on dataset size. 
 
 To start out, let’s assume we have a balanced dataset $D_B$ composed of $N_B$ elements evenly split between 0’s and 1’s (i.e. $\rho_B = 1$, $Z_B = O_B = N_B/2$).  Then,
@@ -71,7 +72,8 @@ Now, suppose we realise this dataset is not realistic and hence not well suited 
 So, if we are just (re)adding 0’s until we recover the original imbalanced dataset $D$, we are not touching the 1’s, meaning that $O_B = O$. For the same reason, the number of false negatives and true positives will not change, hence $FN_B = FN$ and $TP_B = TP$. As a consequence, recall will not change either $r_B = r$. This is why we didn't bother rewrite it. However, the precision will change because the number of $FP$ will increase, 
 ```math
 p = \frac{TP}{TP + \rho \, O \, \mathrm{fpr}} = p_B \frac{TP + O \, \mathrm{fpr}}{TP + \rho \, O \, \mathrm{fpr}} = p_B \frac{r + \mathrm{fpr}}{r + \rho \, \mathrm{fpr}} = p_B \frac{1 + \mathrm{fpr}/r}{ 1 + \rho \, \, \mathrm{fpr}/r}
-``` where in the penultimate step we have used a rewriting of the definition of recall $r = TP/O$. 
+``` 
+where in the penultimate step we have used a rewriting of the definition of recall $r = TP/O$. 
 
 Notice how, in the last formula, everything aside from $\rho$ on the right-hand-side depends on the model performance on the balanced dataset: we can predict how the precision (and hence the $F_1$) will degrade as we move the dataset back to its original balance! Moreover, the cardinality of the dataset has dropped out, meaning that any analysis and conclusion we’ll draw will not depend on dataset size, i.e. any pathological behaviour will not be cured by simply making the dataset larger (if preserving the balance, of course). Finally, notice how the presence of $\rho$ at the denominator implies that the precision on the unbalanced dataset can only decrease, no matter what. 
 
