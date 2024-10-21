@@ -1,3 +1,5 @@
+# Imbalanced Datasets Should Stay Imbalanced
+
 ## Introduction
 
 The common lore in Machine Learning books is that, in the unlucky case you are presented with an imbalanced dataset for a classification task, you should re-balance it right away via under- or over-sampling. 
