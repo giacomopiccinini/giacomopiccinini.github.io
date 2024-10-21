@@ -19,6 +19,11 @@ Assuming the minority class to always be that with label 1, it is useful to intr
 ```math
 \rho = \frac{Z}{O}
 ```
+
+$$
+x^2
+$$
+
 In case of perfectly balanced dataset, $\rho=1$. For an imbalanced dataset, $\rho > 1$. 
 
 In the following we shall assume $D$ to represent some imbalanced dataset and we will indicate with $D_B$ its balanced version obtained by downsampling the majority class. That is, we take $D$ and remove elements to $\mathcal{C}_0$ until its cardinality matches that of $\mathcal{C}_1$ (or, equivalently, $\rho_B = 1$). 
