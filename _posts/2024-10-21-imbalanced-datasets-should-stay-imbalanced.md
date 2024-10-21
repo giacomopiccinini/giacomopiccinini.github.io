@@ -103,7 +103,7 @@ p(\rho) = p_B \frac{1/r}{1 + \rho(1/r - 1)} = p_B\frac{1}{r + \rho(1-r)} = p_B \
 $$
 
 Whilst this is all good, plotting how the precision $p(\rho)$ varies with $\rho$ for a fixed value of $p_B$ is extremely telling. 
-![[/giacomopiccinini.github.io/assets/images/precision-fixed-pb.png]]
+![Precision](/assets/images/precision-fixed-pb.png)
 What we see here is that, unless we start from an extremely high (and hence unrealistic) value for $p_B$ , the precision is going to drop extremely quickly as the dataset is brought back to its natural imbalance. And, in particular, the lower $p_B$ the steepest the downfall. 
 
 Therefore, unless you trained a super-good model with 99.9+% precision on the balanced test set, its value on the realistic test set will drop a lot and very quickly, making what you once thought a good model a completely unusable piece of software.
