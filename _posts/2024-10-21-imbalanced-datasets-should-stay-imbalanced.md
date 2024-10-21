@@ -6,8 +6,6 @@ The common lore in Machine Learning books is that, in the unlucky case you are p
 
 Whilst this recipe has gone down in the textbooks, it is *borderline criminal*. First, datasets “in nature” are never balanced: a realistic dataset for binary classification task will be typically imbalanced with a ratio of 99:1 for the majority vs minority class. Second, artificially modifying a dataset is never a good idea and I am going to explain why in a second. 
 
-To do this, I will start from some maths and leave the code at the very end, just to test out and verify our findings. 
-
 ## A mathematical explanation
 
 Let’s set the stage. Suppose we have a binary classification problem on a generic, possibly imbalanced, dataset $D$. The dataset $D$ will be composed of two subsets $\mathcal{C}_0$ and $\mathcal{C}_1$, $D = \mathcal{C}_0 \cup \mathcal{C}_1$, where $\mathcal{C}_i$ contains all the elements with label $i$. The cardinalities of these subsets, i.e. the number of elements they contain, are indicated with
@@ -19,7 +17,7 @@ $$
 Assuming the minority class to always be that with label 1, it is useful to introduce a quantity $\rho$ defined by
 
 $$
-\rho = \frac{Z}{O}
+\rho = \frac{Z}{O} \, .
 $$
 
 In case of perfectly balanced dataset, $\rho=1$. For an imbalanced dataset, $\rho > 1$. 
@@ -34,7 +32,7 @@ Now, before training a Machine Learning model, we should also split $D$ into a t
 
 Option 1. is the *natural* option,  where the dataset has not been touched. We shall argue later on that this is the best option. 
 
-Option 2. is certainly the worst choice: we get the headaches of an imbalanced train set combined with the unreliability of a perfectly balanced test set. 
+Option 2. is certainly the worst choice: we get the headaches of an imbalanced train set combined with the unreliability of a perfectly balanced test set (more on the unreliability later). 
 
 Option 3. is the one often appearing in textbooks. We shall see how this can lead to misleading results. 
 
@@ -51,7 +49,7 @@ Let us assume that some model has been trained on the train set $D^{TR}$ . The b
 To define the concept of performance, we need to pick a metric first. There’s a plethora of them but we'll try to keep it simple and pick the most common in these cases, i.e. the $F_1$ metric defined as
 
 $$
-F_1 = 2 \frac{p \cdot r}{p + r}
+F_1 = 2 \frac{p \cdot r}{p + r} \, ,
 $$
 
 where $p$ and $r$ indicate *precision* and *recall*, respectively. In turn, these quantities are defined in terms of the *confusion matrix* elements ($TP$, $TN$, $FP$, $FN$) as
@@ -86,7 +84,7 @@ $$
 
 where in the penultimate step we have used a rewriting of the definition of recall $r = TP/O$. 
 
-Notice how, in the last formula, everything aside from $\rho$ on the right-hand-side depends on the model performance on the balanced dataset: we can predict how the precision (and hence the $F_1$) will degrade as we move the dataset back to its original balance! Moreover, the cardinality of the dataset has dropped out, meaning that any analysis and conclusion we’ll draw will not depend on dataset size, i.e. any pathological behaviour will not be cured by simply making the dataset larger (if preserving the balance, of course). Finally, notice how the presence of $\rho$ at the denominator implies that the precision on the unbalanced dataset can only decrease, no matter what. 
+Notice how, in the last formula, everything aside from $\rho$ on the right-hand-side depends on the model performance on the balanced dataset: we can predict how the precision (and hence the $F_1$) will degrade as we move the dataset back to its original balance! Moreover, the cardinality of the dataset has dropped out, meaning that any analysis and conclusion we’ll draw **will not depend on dataset size**, i.e. any pathological behaviour will not be cured by simply making the dataset larger (if preserving the balance, of course). Finally, notice how the presence of $\rho$ at the denominator implies that the **precision on the unbalanced dataset can only decrease**, no matter what. 
 
 In a somewhat abstract way, this is why we can't test on a balanced dataset: we will end up having a lot more false positives in production than we expected! 
 
@@ -104,7 +102,7 @@ $$
 
 Whilst this is all good, plotting how the precision $p(\rho)$ varies with $\rho$ for a fixed value of $p_B$ is extremely telling. 
 ![Precision](/assets/images/precision-fixed-pb.png)
-What we see here is that, unless we start from an extremely high (and hence unrealistic) value for $p_B$ , the precision is going to drop extremely quickly as the dataset is brought back to its natural imbalance. And, in particular, the lower $p_B$ the steepest the downfall. 
+What we see here is that, unless we start from an extremely high (and hence unrealistic) value for $p_B$ , the precision is going to drop extremely quickly as the dataset is brought back to its natural imbalance. And, in particular, **the lower $p_B$ the steepest the downfall**. 
 
 Therefore, unless you trained a super-good model with 99.9+% precision on the balanced test set, its value on the realistic test set will drop a lot and very quickly, making what you once thought a good model a completely unusable piece of software.
 
