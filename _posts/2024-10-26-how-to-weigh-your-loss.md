@@ -4,7 +4,7 @@
 
 I have recently argued in a separate [blog post](https://giacomopiccinini.github.io/2024/10/21/imbalanced-datasets-should-stay-imbalanced.html) that, in the case of a binary classification problem with high class imbalance, under/over-sampling is a bad practice for it leads to inflated metrics. 
 
-Be that as it may, the actual reason for manipulating the dataset is well-founded: training a classification model in a highly imbalanced case is hard! The choice a vanilla cross-entropy as loss function will most likely result in the model (almost) constantly predicting the majority class, which is useless. 
+Be that as it may, the actual reason for manipulating the dataset is well-founded: training a classification model in a highly imbalanced case is hard! The choice of a vanilla cross-entropy as loss function will most likely result in the model (almost) constantly predicting the majority class, which is useless. 
 
 Assuming you won't touch the dataset for the reason above, the simplest thing you could do is weighing your classes in the loss function. As we’ll see in a moment, there is a *natural choice* for the weights, but it may not fully suit your case, although it provides a solid starting point. Interestingly, the choice of weights entails a trade-off between precision and recall and we'll see how.
 
@@ -20,12 +20,12 @@ $$
 L \sim (\lvert\mathcal{C}_0\rvert + \lvert\mathcal{C}_1\rvert) \lambda \sim \lvert\mathcal{C}_0\rvert \lambda \, .
 $$
 
-One can then hope to fix this by introducing some weights that will bring the contributions of $\mathcal{C}_0$ and $\mathcal{C}_1$ to the same order of magnitude so that $\mathcal{C}_0$ doesn't overshadow $\mathcal{C}_1$ anymore. There is a *canonical* or *natural* choice: just give $\mathcal{C}_0$ weight $\lvert\mathcal{C}_1\rvert$ and $\mathcal{C}_1$ weight $\lvert\mathcal{C}_0\rvert$, so that $L \sim \lvert\mathcal{C}_0\rvert\lvert\mathcal{C}_1\rvert \lambda$. 
+One can then hope to fix this by introducing some weights that will bring the contributions of $\mathcal{C}_0$ and $\mathcal{C}_1$ to the same order of magnitude so that $\mathcal{C}_0$ doesn't overshadow $\mathcal{C}_1$ anymore. There is a *canonical* or *natural* choice: just give $\mathcal{C}_0$ weight $\lvert\mathcal{C}_1\rvert$ and $\mathcal{C}_1$ weight $\lvert\mathcal{C}_0\rvert$, so that $L \sim 2\lvert\mathcal{C}_0\rvert\lvert\mathcal{C}_1\rvert \lambda$. 
 
 In other words, the **natural weights** $w_i$ for $\mathcal{C}_i$ are given by
 
 $$
-(w_0, w_1) = (\lvert\mathcal{C}_1\rvert, \lvert\mathcal{C}_0\rvert)
+(w_0, w_1) = (\lvert\mathcal{C}_1\rvert, \lvert\mathcal{C}_0\rvert) \, .
 $$
 
 In fact, we only have **one degree of freedom** which is the ratio $w_r = w_1/w_0$. The reason for this is that the other apparent degree of freedom is "pure gauge" as it is just an overall rescaling of the loss. 
@@ -48,7 +48,7 @@ Conversely, when $w_r$ is set to a high value, the model prioritises the minorit
 
 Given these two extreme cases, we expect the model to interpolate between them when varying $w_r$. One might anticipate precision and recall to be roughly equal around the *natural weights*. In my experience this is somewhat true, but adjustments are most often needed. 
 
-We are now in the position to run some experiments. I have used a fairly large dataset with 88:12 imbalance; unfortunately it's a private one so I am not in the position to share more (but there wasn't any particular feature worth highlighting). Given this imbalance, the natural weight ratio is $w_r = 88/12 \sim 7$. I capped the epochs at 1 (since the dataset was already large and we were aiming for a fine-tuning) and estimated how the recall and precision varied across the various choices. I ended up with this chart (notice that the $x$-axis is in log scale!)
+We are now in the position to run some experiments. I have used a fairly large dataset with 88:12 imbalance; unfortunately it's a private one so I am not in the position to share more (but there wasn't any particular feature worth highlighting). Given this imbalance, the natural weight ratio is $w_r = 88/12 \sim 7$. I trained the model multiple times with different $w_r$'s, capped the epochs at 1 (since the dataset was already large and we were aiming for a fine-tuning) and estimated how the recall and precision varied across the choices. I ended up with this chart (notice that the $x$-axis is in log scale!)
 
 
 ![Chart](/assets/images/precision-vs-recall.png)
