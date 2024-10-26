@@ -14,25 +14,25 @@ Let's start by framing the problem. Suppose we have a binary classification prob
 
  $\lvert\mathcal{C}_0\rvert > \lvert\mathcal{C}_1\rvert$ where $\lvert\bullet\rvert$ denotes the cardinality.
 
-In a highly imbalanced case, $|\mathcal{C}_0| \gg |\mathcal{C}_1|$, the reason for the model trivially predicting 0 is that not enough emphasis is put on predicting the minority class: in other words, the model does not have any incentive to get the 1's right and will get better (i.e. reduce its loss) by simply making sure to get the 0's right, which is easy since they are the majority. 
+In a highly imbalanced case, $\lvert\mathcal{C}_0\rvert \gg \lvert\mathcal{C}_1\rvert$, the reason for the model trivially predicting 0 is that not enough emphasis is put on predicting the minority class: in other words, the model does not have any incentive to get the 1's right and will get better (i.e. reduce its loss) by simply making sure to get the 0's right, which is easy since they are the majority. 
 
 Oversimplifying, and with some abuse of notation, if we let $\lambda$ indicate the order of magnitude for the contribution to the total loss $L$ of a single sample $x$ with ground truth $y$, $\lambda \sim \mathcal{L}(x, y)$ ($\mathcal{L}$ being the loss function), then we'd roughly have
 
 $$
-L \sim (|\mathcal{C}_0| + |\mathcal{C}_1|) \lambda \sim |\mathcal{C}_0| \lambda \, .
+L \sim (\lvert\mathcal{C}_0\rvert + \lvert\mathcal{C}_1\rvert) \lambda \sim \lvert\mathcal{C}_0\rvert \lambda \, .
 $$
 
-One can then hope to fix this by introducing some weights that will bring the contributions of $\mathcal{C}_0$ and $\mathcal{C}_1$ to the same order of magnitude so that $\mathcal{C}_0$ doesn't overshadow $\mathcal{C}_1$ anymore. There is a *canonical* or *natural* choice: just give $\mathcal{C}_0$ weight $|\mathcal{C}_1|$ and $\mathcal{C}_1$ weight $|\mathcal{C}_0|$, so that $L \sim |\mathcal{C}_0||\mathcal{C}_1| \lambda$. 
+One can then hope to fix this by introducing some weights that will bring the contributions of $\mathcal{C}_0$ and $\mathcal{C}_1$ to the same order of magnitude so that $\mathcal{C}_0$ doesn't overshadow $\mathcal{C}_1$ anymore. There is a *canonical* or *natural* choice: just give $\mathcal{C}_0$ weight $\lvert\mathcal{C}_1\rvert$ and $\mathcal{C}_1$ weight $\lvert\mathcal{C}_0\rvert$, so that $L \sim \lvert\mathcal{C}_0\rvert\lvert\mathcal{C}_1\rvert \lambda$. 
 
 In other words, the **natural weights** $w_i$ for $\mathcal{C}_i$ are given by
 
 $$
-(w_0, w_1) = (|\mathcal{C}_1|, |\mathcal{C}_0|)
+(w_0, w_1) = (\lvert\mathcal{C}_1\rvert, \lvert\mathcal{C}_0\rvert)
 $$
 
 In fact, we only have **one degree of freedom** which is the ratio $w_r = w_1/w_0$. The reason for this is that the other apparent degree of freedom is "pure gauge" as it is just an overall rescaling of the loss. 
 
-So, we have come to the conclusion that $w_r= |\mathcal{C}_0| / |\mathcal{C}_1|$ is our natural choice. This can (and in fact will) bring us quite far but it's not necessarily the end of the story.
+So, we have come to the conclusion that $w_r= \lvert\mathcal{C}_0\rvert / \lvert\mathcal{C}_1\rvert$ is our natural choice. This can (and in fact will) bring us quite far but it's not necessarily the end of the story.
 
 ## Exploring The Weights Landscape
 
@@ -46,7 +46,7 @@ A mathematically sound proof is not straightforward (I think), but I will provid
 
 When setting $w_r$ to a low value, hence not penalising or even emphasising the *majority* class, the model tends to predict 0 almost exclusively. This means that it will **fail to identify** the vast majority of actual class 1 instances. Put differently, we'll be flooded with *false negatives*. Conversely, the model will only predict class 1 when it is highly confident that a sample truly belongs to that class. This means we can anticipate many *false negatives* alongside very few *false positives*, resulting in high precision but low recall.
 
-Conversely, when $w_r$ is set to a high value, the model prioritises the minority class, class 1. For sufficiently high $w_r$ we end up in a situation opposite to the one we started from: even if $|\mathcal{C}_0| \gg |\mathcal{C}_1|$ still holds true, there is so much emphasis on getting $\mathcal{C}_1$ right that the model finds more convenient to simply blindly predicting 1. As a result, we will end up with a lot of *false positives* and few *false negatives*, or high recall but low precision.
+Conversely, when $w_r$ is set to a high value, the model prioritises the minority class, class 1. For sufficiently high $w_r$ we end up in a situation opposite to the one we started from: even if $\lvert\mathcal{C}_0\rvert \gg \lvert\mathcal{C}_1\rvert$ still holds true, there is so much emphasis on getting $\mathcal{C}_1$ right that the model finds more convenient to simply blindly predicting 1. As a result, we will end up with a lot of *false positives* and few *false negatives*, or high recall but low precision.
 
 Given these two extreme cases, we expect the model to interpolate between them when varying $w_r$. One might anticipate precision and recall to be roughly equal around the *natural weights*. In my experience this is somewhat true, but adjustments are most often needed. 
 
