@@ -6,4 +6,4 @@ In my previous life I was a String Theorist at Swansea University (Wales), where
 
 Here I will try and report (most likely with random cadence) some formal aspects of Machine Learning I find interesting. I am a firm believer that Machine Learning as a field requires much more formality and way less parameters.
 
-Ping me on any social to describe this further!
+Ping me on any social to discuss this further!
