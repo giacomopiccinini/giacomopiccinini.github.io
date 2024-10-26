@@ -10,7 +10,9 @@ Assuming you won't touch the dataset for the reason above, the simplest thing yo
 
 ## Natural Weights
 
-Let's start by framing the problem. Suppose we have a binary classification problem on a generic, possibly imbalanced, dataset $D$. The dataset $D$ will be composed of two subsets $\mathcal{C}_0$ and $\mathcal{C}_1$, $D = \mathcal{C}_0 \cup \mathcal{C}_1$, where $\mathcal{C}_i$ contains all the elements with label $i$. We shall assume that $\mathcal{C}_0$ is the majority class, i.e. $|\mathcal{C}_0| > |\mathcal{C}_1|$ where $|\bullet|$ denotes the cardinality.
+Let's start by framing the problem. 
+
+Suppose we have a binary classification problem on a generic, possibly imbalanced, dataset $D$. The dataset $D$ will be composed of two subsets $\mathcal{C}_0$ and $\mathcal{C}_1$, $D = \mathcal{C}_0 \cup \mathcal{C}_1$, where $\mathcal{C}_i$ contains all the elements with label $i$. We shall assume that $\mathcal{C}_0$ is the majority class, i.e. $|\mathcal{C}_0| > |\mathcal{C}_1|$ where $|\bullet|$ denotes the cardinality.
 
 In a highly imbalanced case, $|\mathcal{C}_0| \gg |\mathcal{C}_1|$, the reason for the model trivially predicting 0 is that not enough emphasis is put on predicting the minority class: in other words, the model does not have any incentive to get the 1's right and will get better (i.e. reduce its loss) by simply making sure to get the 0's right, which is easy since they are the majority. 
 
