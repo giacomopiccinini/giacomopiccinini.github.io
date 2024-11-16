@@ -21,30 +21,30 @@ To address this, one approach is to design a **differentiable approximation** of
 
 ## Entering the continuous
 
-Let's take a binary classification problem, where we have a vector of ground truths $y$ and a set of softmaxed predictions $p$. When needed, we will indicate the $i$-th element of $y$ and $p$ (and any other vector, in fact) with an index, e.g. $p_i$ with $i=1, \dots, B$ where $B$ is the batch size. Notice that $y \in \{0, 1\}^B$ while $p \in [0, 1]^B$.
+Let's take a binary classification problem, where we have a vector of ground truths $y$ and a set of softmaxed predictions $p$. When needed, we will indicate the $i$-th element of $y$ and $p$ (and any other vector, in fact) with an index, e.g. $p_i$ with $i=1, \dots, B$ where $B$ is the batch size. Notice that $y \in `\{0, 1 `\}^B$ while $p \in [0, 1]^B$.
 
 We can use $y$ to define two projection operators, $ \pi_0 $ and $ \pi_1 $, that isolate the negative and positive classes, respectively. These operators modify $ p $ by zeroing out all entries that do not correspond to the negative class ($ \pi_0 $) or positive class ($ \pi_1 $) in the ground truth vector $ y $. For example:
 
 $$
-p = [0.1, 0.6, 0.3], \quad y = [0, 1, 1], \quad \pi_0(p) =[0.1, 0, 0], \quad \pi_1(p) = [0, 0.6, 0.1]
+p = [0.1, 0.6, 0.3], \quad y = [0, 1, 1], \quad \pi_0(p) =[0.1, 0, 0], \quad \pi_1(p) = [0, 0.6, 0.1] \, .
 $$
 
 The projectors act via the Hadamard product $\odot$ and are trivially defined by 
 
 $$
-\pi_0 = (1-y)\, \qquad \pi_1 = y
+\pi_0 = (1-y)\, \qquad \pi_1 = y \, .
 $$
 
 Using these projections, we can now compute the **expected** negative ($ N $) and positive ($ P $) predictions from $ p $:
 
 $$
-N = \pi_0(p), \qquad P = \pi_1(p)
+N = \pi_0(p), \qquad P = \pi_1(p) \, .
 $$
 
 Next, we need to define what constitutes *True* or *False* predictions in a differentiable context. As mentioned earlier, we cannot use a threshold-based approach, as it introduces the discretization we aim to avoid. Here are the definitions we will adopt, with explanations to follow:
 
 $$
-TP = \sum_i P_i, \qquad FP = \sum_i N_i, \qquad TN = \sum_i (\pi_0 - N)_i, \qquad FN = \sum_i (\pi_1 - P)_i
+TP = \sum_i P_i, \qquad FP = \sum_i N_i, \qquad TN = \sum_i (\pi_0 - N)_i, \qquad FN = \sum_i (\pi_1 - P)_i \, .
 $$
 
 The reasoning behind these definitions is as follows: Consider a case where the model predicts $ p_i = 0.8 $ for some $ i $. If the corresponding ground truth is $ y_i = 1 $, this prediction is 0.8 (or 80%) correct, and we interpret it as contributing 80% to the True Positives (TP). Conversely, if $ y_i = 0 $, the prediction is 80% incorrect, contributing 80% to the False Positives (FP), assuming a threshold of $ t = 0.5 $ was applied.
@@ -52,7 +52,7 @@ The reasoning behind these definitions is as follows: Consider a case where the 
 We can express these calculations more explicitly as:
 
 $$
-TP = y \cdot p, \qquad FP = (1-y) \cdot p, \qquad TN = (1-y) \cdot (1-p), \qquad FN = y \cdot (1-p)
+TP = y \cdot p, \qquad FP = (1-y) \cdot p, \qquad TN = (1-y) \cdot (1-p), \qquad FN = y \cdot (1-p) \, .
 $$
 
 Here, the symbol $ \cdot $ represents the element-wise scalar product. Using these components, we can construct any desired metric—such as $ F_\beta $-score, precision, recall, or accuracy—and use it as a differentiable loss function for the classifier.
