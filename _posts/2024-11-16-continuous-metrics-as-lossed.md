@@ -21,7 +21,7 @@ To address this, one approach is to design a **differentiable approximation** of
 
 ## Entering the continuous
 
-Let's take a binary classification problem, where we have a vector of ground truths $y$ and a set of softmaxed predictions $p$. When needed, we will indicate the $i$-th element of $y$ and $p$ (and any other vector, in fact) with an index, e.g. $p_i$ with $i=1, \dots, B$ where $B$ is the batch size. Notice that $y \in `\{0, 1 `\}^B$ while $p \in [0, 1]^B$.
+Let's take a binary classification problem, where we have a vector of ground truths $y$ and a set of softmaxed predictions $p$. When needed, we will indicate the $i$-th element of $y$ and $p$ (and any other vector, in fact) with an index, e.g. $p_i$ with $i=1, \dots, B$ where $B$ is the batch size. Notice that $y \in \{0, 1 \}^B$ while $p \in [0, 1]^B$.
 
 We can use $y$ to define two projection operators, $ \pi_0 $ and $ \pi_1 $, that isolate the negative and positive classes, respectively. These operators modify $ p $ by zeroing out all entries that do not correspond to the negative class ($ \pi_0 $) or positive class ($ \pi_1 $) in the ground truth vector $ y $. For example:
 
